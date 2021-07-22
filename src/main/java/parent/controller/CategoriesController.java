@@ -4,7 +4,6 @@ import org.reactivestreams.Publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import parent.domain.Category;
-import parent.domain.Vendor;
 import parent.repositories.CategoryRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -43,12 +42,22 @@ public class CategoriesController {
 
     @PatchMapping("/api/v1/updateCategory/{id}")
     public Mono<Category> updateCategoryPatch(@PathVariable String id ,@RequestBody Category category){
+        /*
         Category categoryFound = categoryRepository.findById(id).block();
         if(!categoryFound.getDescription().equalsIgnoreCase(category.getDescription())){
             categoryFound.setDescription(category.getDescription());
             return categoryRepository.save(categoryFound);
         }
         return Mono.just(category);
+*/
+        return categoryRepository.findById(id).flatMap(categoryFound->{
+            Category newCategory = new Category(categoryFound.getDescription());
+            newCategory.setId(id);
+            if(category.getDescription() != null){
+                newCategory.setDescription(category.getDescription());
+            }
+            return categoryRepository.save(newCategory);
+        });
     }
 
 }

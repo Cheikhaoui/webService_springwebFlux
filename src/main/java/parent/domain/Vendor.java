@@ -18,4 +18,8 @@ public class Vendor {
     private String firstName;
     private String lastName;
 
+    public Vendor(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

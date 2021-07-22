@@ -3,7 +3,6 @@ package parent.controller;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import parent.domain.Category;
 import parent.domain.Vendor;
 import parent.repositories.VendorRepository;
 import reactor.core.publisher.Flux;
@@ -36,6 +35,7 @@ public class VendorController {
 
     @PatchMapping("/api/v1/updateVendor/{id}")
     public Mono<Vendor> updateVendorPatch(@PathVariable String id , @RequestBody Vendor vendor){
+        /*
         Vendor vendorFound = vendorRepository.findById(id).block();
         if(!vendorFound.getFirstName().equalsIgnoreCase(vendor.getFirstName())){
             vendorFound.setFirstName(vendor.getFirstName());
@@ -45,6 +45,18 @@ public class VendorController {
             return vendorRepository.save(vendorFound);
         }
         return Mono.just(vendor);
+*/
+        return vendorRepository.findById(id).flatMap(vendor1 -> {
+            Vendor newVendor = new Vendor(vendor1.getFirstName(),vendor1.getLastName());
+            newVendor.setId(id);
+            if(vendor.getFirstName()!= null) {
+                newVendor.setFirstName(vendor.getFirstName());
+            }
+            if(vendor.getLastName()!= null) {
+                newVendor.setLastName(vendor.getLastName());
+            }
+            return vendorRepository.save(newVendor);
+        });
     }
 
     @PutMapping("/api/v1/updateVendor/{id}")

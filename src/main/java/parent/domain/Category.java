@@ -18,4 +18,7 @@ public class Category {
     private String id;
     private String description;
 
+    public Category(String description) {
+        this.description = description;
+    }
 }
